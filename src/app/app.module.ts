@@ -20,7 +20,7 @@ import { ChartService } from './services/chart.service';
     MultiplelinechartsComponent,
     BarchartComponent,
     LinechartComponent,
- 
+
   ],
   imports: [
     BrowserModule,

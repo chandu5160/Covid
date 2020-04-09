@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as CanvasJS from 'src/assets/javascripts/canvasjs.min.js';
 import { ChartService } from 'src/app/services/chart.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-multiplelinecharts',
@@ -9,12 +10,19 @@ import { ChartService } from 'src/app/services/chart.service';
 })
 export class MultiplelinechartsComponent implements OnInit {
 
-  constructor(private _chartService: ChartService) {
-    _chartService.multilineChart();
+  constructor(private _chartService: ChartService,
+              private router:Router) {
+    // _chartService.multilineChart();
   }
 
   ngOnInit() {
 
-  }
+    if(this._chartService.s1.length > 0){
+      this._chartService.multilineChart();
+    }
+    else{
+        this.router.navigate(['/']);
+    }
 
+   }
 }

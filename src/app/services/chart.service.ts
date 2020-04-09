@@ -10,6 +10,7 @@ import * as CanvasJS from 'src/assets/javascripts/canvasjs.min.js';
 
 export class ChartService {
   apiUrl = environment.apiUrl;
+  mapId=null;
   name;
   code;
   date = [];
@@ -26,7 +27,9 @@ export class ChartService {
 
   showChart(stateCode) {
     console.log(stateCode)
+    this.mapId = stateCode;
     this.router.navigate(['/state-chart'])
+
   }
 
   async converdata(data) {
@@ -47,8 +50,67 @@ export class ChartService {
      this.line1Chart();
      this.line2Chart();
      this.line3Chart();
+    this.cumulativeMultilineChart();
+
     this.predectionbarChart();
   }
+cumulativeMultilineChart() {
+  var chart = new CanvasJS.Chart("cumulativeMultilineChartContainer", {
+    animationEnabled: true,
+    title: {
+      text: this.name
+    },
+    axisX: {
+      valueFormatString: "DD MMM,YY"
+    },
+    axisY: {
+      title: "People",
+
+    },
+    legend: {
+      cursor: "pointer",
+      fontSize: 16,
+      itemclick: toggleDataSeries
+    },
+    toolTip: {
+      shared: true
+    },
+    data: [{
+      name: "s1",
+      type: "spline",
+      // yValueFormatString: "#0.## °C",
+      showInLegend: true,
+      dataPoints: this.s1
+    },
+    {
+      name: "s2",
+      type: "spline",
+      // yValueFormatString: "#0.## °C",
+      showInLegend: true,
+      dataPoints: this.s2
+    },
+    {
+      name: "s3",
+      type: "spline",
+      // yValueFormatString: "#0.## °C",
+      showInLegend: true,
+      dataPoints: this.s3
+    }]
+  });
+
+  chart.render();
+
+  function toggleDataSeries(e) {
+    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+      e.dataSeries.visible = false;
+    }
+    else {
+      e.dataSeries.visible = true;
+    }
+    chart.render();
+  }
+}
+
 
   multilineChart() {
     var chart = new CanvasJS.Chart("multilineContainer", {
@@ -73,21 +135,21 @@ export class ChartService {
       },
       data: [{
         name: "s1",
-        type: "spline",
+        type: "area",
         // yValueFormatString: "#0.## °C",
         showInLegend: true,
         dataPoints: this.s1
       },
       {
         name: "s2",
-        type: "spline",
+        type: "area",
         // yValueFormatString: "#0.## °C",
         showInLegend: true,
         dataPoints: this.s2
       },
       {
         name: "s3",
-        type: "spline",
+        type: "area",
         // yValueFormatString: "#0.## °C",
         showInLegend: true,
         dataPoints: this.s3
@@ -142,7 +204,7 @@ export class ChartService {
 
     chart.render();
   }
-  
+
   line1Chart() {
     let chart = new CanvasJS.Chart("line1chartContainer", {
       animationEnabled: true,
@@ -155,7 +217,7 @@ export class ChartService {
       },
       backgroundColor: "#ffcccc",
       data: [{
-        type: "line",
+        type: "area",
         lineColor: "red",
         dataPoints: this.barchart
       }]
