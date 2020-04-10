@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ChartService } from './services/chart.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'covid';
+  constructor(public _chartService :ChartService){
+
+  }
 }

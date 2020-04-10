@@ -64,8 +64,8 @@ xlsxFile('./src/assets/spreedsheets/India.xlsx').then((rows) => {
 
 
 app.get('/india-data', (req, res) => {
- 
-  console.log(indiaCovidData);
+
+  res.json(indiaCovidData);
 
 });
 

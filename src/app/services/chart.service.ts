@@ -10,7 +10,7 @@ import * as CanvasJS from 'src/assets/javascripts/canvasjs.min.js';
 
 export class ChartService {
   apiUrl = environment.apiUrl;
-  mapId=null;
+  mapId = null;
   name;
   code;
   date = [];
@@ -19,12 +19,24 @@ export class ChartService {
   s3 = [];
   s4 = [];
   barchart = [];
+  indiaTotalCases = [];
   constructor(private router: Router, private http: HttpClient) {
+    http.get(this.apiUrl + "/india-data").subscribe(res => {
+      this.converIndiaCovidData(res);
+    })
     http.get(this.apiUrl + "/data").subscribe(data => {
       this.converdata(data);
     })
-  }
 
+  }
+  async converIndiaCovidData(res) {
+    await res.latestData.forEach(ele => {
+      ele.forEach(element => {
+        this.indiaTotalCases.push(element[1]);
+      });
+    });
+    console.log(this.indiaTotalCases)
+  }
   showChart(stateCode) {
     console.log(stateCode)
     this.mapId = stateCode;
@@ -46,70 +58,70 @@ export class ChartService {
       this.s3.push(d3);
       this.barchart.push(d4);
     });
-     this.barChart();
-     this.line1Chart();
-     this.line2Chart();
-     this.line3Chart();
+    this.barChart();
+    this.line1Chart();
+    this.line2Chart();
+    this.line3Chart();
     this.cumulativeMultilineChart();
 
     this.predectionbarChart();
   }
-cumulativeMultilineChart() {
-  var chart = new CanvasJS.Chart("cumulativeMultilineChartContainer", {
-    animationEnabled: true,
-    title: {
-      text: this.name
-    },
-    axisX: {
-      valueFormatString: "DD MMM,YY"
-    },
-    axisY: {
-      title: "People",
+  cumulativeMultilineChart() {
+    var chart = new CanvasJS.Chart("cumulativeMultilineChartContainer", {
+      animationEnabled: true,
+      title: {
+        text: this.name
+      },
+      axisX: {
+        valueFormatString: "DD MMM,YY"
+      },
+      axisY: {
+        title: "People",
 
-    },
-    legend: {
-      cursor: "pointer",
-      fontSize: 16,
-      itemclick: toggleDataSeries
-    },
-    toolTip: {
-      shared: true
-    },
-    data: [{
-      name: "s1",
-      type: "spline",
-      // yValueFormatString: "#0.## °C",
-      showInLegend: true,
-      dataPoints: this.s1
-    },
-    {
-      name: "s2",
-      type: "spline",
-      // yValueFormatString: "#0.## °C",
-      showInLegend: true,
-      dataPoints: this.s2
-    },
-    {
-      name: "s3",
-      type: "spline",
-      // yValueFormatString: "#0.## °C",
-      showInLegend: true,
-      dataPoints: this.s3
-    }]
-  });
+      },
+      legend: {
+        cursor: "pointer",
+        fontSize: 16,
+        itemclick: toggleDataSeries
+      },
+      toolTip: {
+        shared: true
+      },
+      data: [{
+        name: "s1",
+        type: "spline",
+        // yValueFormatString: "#0.## °C",
+        showInLegend: true,
+        dataPoints: this.s1
+      },
+      {
+        name: "s2",
+        type: "spline",
+        // yValueFormatString: "#0.## °C",
+        showInLegend: true,
+        dataPoints: this.s2
+      },
+      {
+        name: "s3",
+        type: "spline",
+        // yValueFormatString: "#0.## °C",
+        showInLegend: true,
+        dataPoints: this.s3
+      }]
+    });
 
-  chart.render();
-
-  function toggleDataSeries(e) {
-    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-      e.dataSeries.visible = false;
-    }
-    else {
-      e.dataSeries.visible = true;
-    }
     chart.render();
+
+    function toggleDataSeries(e) {
+      if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+        e.dataSeries.visible = false;
+      }
+      else {
+        e.dataSeries.visible = true;
+      }
+      chart.render();
+    }
   }
-}
 
 
   multilineChart() {
